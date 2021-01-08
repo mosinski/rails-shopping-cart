@@ -1,5 +1,5 @@
-class Order < ApplicationRecord
-  TRANSACTION_SUCCESS_STATUSES = [
+class Transaction < ApplicationRecord
+  SUCCESS_STATUSES = [
     Braintree::Transaction::Status::Authorizing,
     Braintree::Transaction::Status::Authorized,
     Braintree::Transaction::Status::Settled,
@@ -9,9 +9,5 @@ class Order < ApplicationRecord
     Braintree::Transaction::Status::SubmittedForSettlement,
   ]
 
-  has_many :items, class_name: 'OrderItem'
-
-  def amount
-    items.map(&:amount).sum
-  end
+  enum status: %i(initialized started paid failed)
 end

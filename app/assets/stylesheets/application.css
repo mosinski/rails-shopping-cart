@@ -17,3 +17,7 @@
 a {
   color: blue;
 }
+
+legend {
+  padding: 3px 6px;
+}

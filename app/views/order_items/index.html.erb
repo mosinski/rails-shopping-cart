@@ -14,7 +14,7 @@
       <tr>
         <td><%= item.product.title %></td>
         <td><%= number_to_currency item.price %></td>
-        <td><%= item.quantity %></td>
+        <td align="center"><%= item.quantity %></td>
         <td>
           <%= form_for item, method: :delete do |f| %>
             <%= f.submit "Remove" %>
@@ -23,4 +23,13 @@
       </tr>
     <% end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <td></td>
+      <td colspan="2"><%= number_to_currency @order.amount %></td>
+      <td>
+        <%= button_to "Checkout", new_checkout_path, method: :get %>
+      </td>
+    </tr>
+  </tfoot>
 </table>
