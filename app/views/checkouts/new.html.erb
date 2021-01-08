@@ -1,9 +1,7 @@
-<p>
-  Checkout
-</p>
+<h4>Checkout</h4>
 
-<%= form_for :checkout, url: checkouts_url, method: :post, id: "payment-form" do |f| %>
-  <%= f.hidden_field :nonce %>
+<%= form_for :checkout, url: checkouts_url, method: :post, html: { id: :checkout } do |f| %>
+  <%= f.hidden_field :payment_method_nonce %>
   <section>
     <label for="amount">
       <span class="input-label">Amount</span>
@@ -12,78 +10,28 @@
       </div>
     </label>
 
-    <fieldset>
-      <legend>Biling</legend>
+    <%= render "checkouts/form/customer", f: f %>
+    <%= render "checkouts/form/biling", f: f  %>
 
-      <%= fields_for :billing do |b| %>
-        <label for="company">
-          <span class="input-label">Company</span>
-          <div class="input-wrapper">
-            <%= b.text_field :company %>
-          </div>
-        </label>
-        <label for="phone">
-          <span class="input-label">Phone</span>
-          <div class="input-wrapper">
-            <%= b.text_field :phone %>
-          </div>
-        </label>
-        <label for="email">
-          <span class="input-label">Email</span>
-          <div class="input-wrapper">
-            <%= b.text_field :email %>
-          </div>
-        </label>
-        <label for="phone">
-          <span class="input-label">Phone</span>
-          <div class="input-wrapper">
-            <%= b.text_field :phone %>
-          </div>
-        </label>
-        <label for="state">
-          <span class="input-label">State</span>
-          <div class="input-wrapper">
-            <%= b.text_field :state %>
-          </div>
-        </label>
-        <label for="first_name">
-          <span class="input-label">First Name</span>
-          <div class="input-wrapper">
-            <%= b.text_field :first_name %>
-          </div>
-        </label>
-        <label for="last_name">
-          <span class="input-label">Last Name</span>
-          <div class="input-wrapper">
-            <%= b.text_field :last_name %>
-          </div>
-        </label>
-      <% end %>
-    </fieldset>
-
-    <div class="bt-drop-in-wrapper">
-      <div id="bt-dropin"></div>
-    </div>
+    <div id="bt-dropin"></div>
   </section>
 
-  <button class="button" type="submit"><span>Test Transaction</span></button>
+  <%= f.submit "Purchase" %>
 <% end %>
 
 <script src="https://js.braintreegateway.com/web/dropin/1.25.0/js/dropin.min.js"></script>
 <script>
-  var form = document.querySelector('#payment-form');
-  var client_token = "<%= @client_token %>";
-
   braintree.dropin.create({
-    authorization: client_token,
+    authorization: "<%= @client_token %>",
     container: '#bt-dropin',
     vaultManager: true,
     paypal: {
       flow: 'vault'
     }
   }, function (createErr, instance) {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
+    document.getElementById('checkout').addEventListener('submit', function (e) {
+      var form = this;
+      e.preventDefault();
 
       instance.requestPaymentMethod(function (err, payload) {
         if (err) {
@@ -91,7 +39,7 @@
           return;
         }
 
-        document.querySelector('#nonce').value = payload.nonce;
+        document.getElementById('checkout_payment_method_nonce').value = payload.nonce;
         form.submit();
       });
     });

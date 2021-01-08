@@ -1,0 +1,42 @@
+<fieldset>
+  <legend>Biling</legend>
+
+  <%= f.fields_for :billing do |b| %>
+    <%= b.check_box :enabled, { checked: true, onclick: "toggleDiv('biling')" } %>
+    <label for="billing_enabled">Same as Customer</label>
+
+    <div id="biling" style="display:none">
+      <br>
+      <label for="first_name">
+        <span class="input-label">First Name</span>
+        <div class="input-wrapper">
+          <%= b.text_field :first_name %>
+        </div>
+      </label>
+      <label for="last_name">
+        <span class="input-label">Last Name</span>
+        <div class="input-wrapper">
+          <%= b.text_field :last_name %>
+        </div>
+      </label>
+      <label for="company">
+        <span class="input-label">Company</span>
+        <div class="input-wrapper">
+          <%= b.text_field :company %>
+        </div>
+      </label>
+      <label for="address">
+        <span class="input-label">Address</span>
+        <div class="input-wrapper">
+          <%= b.text_field :street_address %>
+        </div>
+      </label>
+      <label for="city">
+        <span class="input-label">City</span>
+        <div class="input-wrapper">
+          <%= b.text_field :locality %>
+        </div>
+      </label>
+    </div>
+  <% end %>
+</fieldset>

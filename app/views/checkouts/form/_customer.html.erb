@@ -1,0 +1,36 @@
+<fieldset>
+  <legend>Customer</legend>
+
+  <%= f.fields_for :customer do |c| %>
+    <label for="first_name">
+      <span class="input-label">First Name</span>
+      <div class="input-wrapper">
+        <%= c.text_field :first_name %>
+      </div>
+    </label>
+    <label for="last_name">
+      <span class="input-label">Last Name</span>
+      <div class="input-wrapper">
+        <%= c.text_field :last_name %>
+      </div>
+    </label>
+    <label for="company">
+      <span class="input-label">Company</span>
+      <div class="input-wrapper">
+        <%= c.text_field :company %>
+      </div>
+    </label>
+    <label for="phone">
+      <span class="input-label">Phone</span>
+      <div class="input-wrapper">
+        <%= c.text_field :phone %>
+      </div>
+    </label>
+    <label for="email">
+      <span class="input-label">Email</span>
+      <div class="input-wrapper">
+        <%= c.text_field :email %>
+      </div>
+    </label>
+  <% end %>
+</fieldset>

@@ -4,7 +4,7 @@ class CheckoutsController < ApplicationController
   end
 
   def new
-    @client_token = gateway.client_token.generate
+    @client_token = gateway.client_token.generate#(customer_id: cart_token)
     @order = current_cart.order
   end
 
@@ -14,15 +14,13 @@ class CheckoutsController < ApplicationController
   end
 
   def create
-    amount = params["amount"] # In production you should not take amounts directly from clients
-    nonce = params["payment_method_nonce"]
-
     result = gateway.transaction.sale(
-      amount: amount,
-      payment_method_nonce: nonce,
-      options: {
-        submit_for_settlement: true
-      }
+      checkout_params.to_h.merge(
+        amount: current_cart.order.amount,
+        options: {
+          submit_for_settlement: true
+        }
+      )
     )
 
     if result.success? || result.transaction
@@ -37,7 +35,7 @@ class CheckoutsController < ApplicationController
   def _create_result_hash(transaction)
     status = transaction.status
 
-    if Order::TRANSACTION_SUCCESS_STATUSES.include? status
+    if Transaction::SUCCESS_STATUSES.include? status
       result_hash = {
         :header => "Sweet Success!",
         :icon => "success",
@@ -56,5 +54,13 @@ class CheckoutsController < ApplicationController
 
   def gateway
     @_gateway ||= Braintree::Configuration.gateway
+  end
+
+  def checkout_params
+    params.require(:checkout).permit(
+      :payment_method_nonce,
+      customer: %i(first_name last_name company phone email),
+      billing: %i(first_name last_name company street_address locality)
+    )
   end
 end

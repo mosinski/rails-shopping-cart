@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   def current_cart
     @current_cart ||= ShoppingCart.new(token: cart_token)
   end
-  helper_method :current_cart
+  helper_method :current_cart, :cart_token
 
   private
 
